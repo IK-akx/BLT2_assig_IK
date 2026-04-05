@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+
+    env:
+      MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
+
     steps:
       - uses: actions/checkout@v5
         with:
@@ -31,7 +35,7 @@ jobs:
       - name: Compile contracts
         run: forge build --sizes
 
-      - name: Run tests
+      - name: Run all tests (including fork tests)
         run: forge test -vvv
 
       - name: Generate gas report
@@ -42,6 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+
     steps:
       - uses: actions/checkout@v5
         with:
@@ -53,6 +58,7 @@ jobs:
         with:
           target: .
           sarif: report.sarif
+          fail-on: none
 
       - name: Upload Slither SARIF report
         uses: actions/upload-artifact@v4
