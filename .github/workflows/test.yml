@@ -48,17 +48,10 @@ jobs:
           persist-credentials: false
           submodules: recursive
 
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-
-      - name: Compile project
-        run: forge build
-
       - name: Run Slither
         uses: crytic/slither-action@v0.3.0
         with:
           target: .
-          ignore-compile: true
           sarif: report.sarif
 
       - name: Upload Slither SARIF report
