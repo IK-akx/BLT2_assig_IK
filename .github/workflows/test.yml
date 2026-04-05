@@ -11,8 +11,8 @@ env:
   FOUNDRY_PROFILE: ci
 
 jobs:
-  check:
-    name: Foundry project
+  foundry:
+    name: Foundry Test & Coverage
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -24,6 +24,8 @@ jobs:
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
 
       - name: Show Forge version
         run: forge --version
@@ -36,3 +38,39 @@ jobs:
 
       - name: Run Forge tests
         run: forge test -vvv
+
+      - name: Run Forge gas report
+        run: forge test --gas-report
+
+      - name: Run Forge coverage
+        run: forge coverage --report lcov
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: lcov.info
+
+  slither:
+    name: Slither Static Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      - name: Run Slither
+        uses: crytic/slither-action@v0.3.0
+        with:
+          node-version: 20
+          solc-version: 0.8.33
+          sarif: report.sarif
+
+      - name: Upload Slither SARIF report
+        uses: actions/upload-artifact@v4
+        with:
+          name: slither-report
+          path: report.sarif
