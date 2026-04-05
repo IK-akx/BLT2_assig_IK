@@ -7,12 +7,9 @@ on:
   pull_request:
   workflow_dispatch:
 
-env:
-  FOUNDRY_PROFILE: ci
-
 jobs:
   foundry:
-    name: Foundry Test & Coverage
+    name: Build, Test, Gas Report
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -24,32 +21,21 @@ jobs:
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: nightly
 
       - name: Show Forge version
         run: forge --version
 
-      - name: Run Forge fmt
+      - name: Check formatting
         run: forge fmt --check
 
-      - name: Run Forge build
+      - name: Compile contracts
         run: forge build --sizes
 
-      - name: Run Forge tests
+      - name: Run tests
         run: forge test -vvv
 
-      - name: Run Forge gas report
+      - name: Generate gas report
         run: forge test --gas-report
-
-      - name: Run Forge coverage
-        run: forge coverage --report lcov
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: lcov.info
 
   slither:
     name: Slither Static Analysis
@@ -62,11 +48,17 @@ jobs:
           persist-credentials: false
           submodules: recursive
 
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Compile project
+        run: forge build
+
       - name: Run Slither
         uses: crytic/slither-action@v0.3.0
         with:
-          node-version: 20
-          solc-version: 0.8.33
+          target: .
+          ignore-compile: true
           sarif: report.sarif
 
       - name: Upload Slither SARIF report
