@@ -86,10 +86,10 @@ contract MyTokenUnitTest is Test {
 
     function testTransferEvent() public {
         vm.prank(owner);
-        
+
         vm.expectEmit(true, true, false, true);
         emit Transfer(owner, user1, 100 ether);
-        
+
         token.transfer(user1, 100 ether);
     }
 }

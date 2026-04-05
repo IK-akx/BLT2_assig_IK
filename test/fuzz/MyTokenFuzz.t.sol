@@ -35,20 +35,20 @@ contract MyTokenFuzzTest is Test {
         vm.assume(from != to);
         vm.assume(amount > 0);
         vm.assume(allowanceAmount > 0);
-        
+
         token.mint(from, 10000 ether);
-        
+
         vm.prank(from);
         token.approve(address(this), allowanceAmount);
-        
+
         vm.assume(amount <= token.balanceOf(from));
         vm.assume(amount <= token.allowance(from, address(this)));
-        
+
         uint256 fromBalanceBefore = token.balanceOf(from);
         uint256 toBalanceBefore = token.balanceOf(to);
-        
+
         token.transferFrom(from, to, amount);
-        
+
         assertEq(token.balanceOf(from), fromBalanceBefore - amount);
         assertEq(token.balanceOf(to), toBalanceBefore + amount);
     }

@@ -55,7 +55,7 @@ contract LendingPoolTest is Test {
         vm.prank(user1);
         pool.deposit(1000 ether);
 
-        (uint256 collateralAmt, uint256 borrowedAmt, ) = pool.positions(user1);
+        (uint256 collateralAmt, uint256 borrowedAmt,) = pool.positions(user1);
         assertEq(collateralAmt, 1000 ether);
         assertEq(borrowedAmt, 0);
         assertEq(collateral.balanceOf(address(pool)), 1000 ether);
@@ -67,7 +67,7 @@ contract LendingPoolTest is Test {
         pool.withdraw(400 ether);
         vm.stopPrank();
 
-        (uint256 collateralAmt, , ) = pool.positions(user1);
+        (uint256 collateralAmt,,) = pool.positions(user1);
         assertEq(collateralAmt, 600 ether);
         assertEq(collateral.balanceOf(user1), 9400 ether);
     }
@@ -78,7 +78,7 @@ contract LendingPoolTest is Test {
         pool.borrow(750 ether);
         vm.stopPrank();
 
-        (, uint256 borrowedAmt, ) = pool.positions(user1);
+        (, uint256 borrowedAmt,) = pool.positions(user1);
         assertEq(borrowedAmt, 750 ether);
         assertEq(borrow.balanceOf(user1), 10_750 ether);
     }
@@ -104,7 +104,7 @@ contract LendingPoolTest is Test {
         pool.repay(200 ether);
         vm.stopPrank();
 
-        (, uint256 borrowedAmt, ) = pool.positions(user1);
+        (, uint256 borrowedAmt,) = pool.positions(user1);
         assertEq(borrowedAmt, 300 ether);
     }
 
@@ -115,7 +115,7 @@ contract LendingPoolTest is Test {
         pool.repay(500 ether);
         vm.stopPrank();
 
-        (, uint256 borrowedAmt, ) = pool.positions(user1);
+        (, uint256 borrowedAmt,) = pool.positions(user1);
         assertEq(borrowedAmt, 0);
     }
 
@@ -137,7 +137,7 @@ contract LendingPoolTest is Test {
         pool.withdraw(1000 ether);
         vm.stopPrank();
 
-        (uint256 collateralAmt, uint256 borrowedAmt, ) = pool.positions(user1);
+        (uint256 collateralAmt, uint256 borrowedAmt,) = pool.positions(user1);
         assertEq(collateralAmt, 0);
         assertEq(borrowedAmt, 0);
         assertEq(collateral.balanceOf(user1), 10_000 ether);
@@ -160,7 +160,7 @@ contract LendingPoolTest is Test {
 
         assertGt(debtAfter, debtBefore);
 
-        (, uint256 borrowedAmt, ) = pool.positions(user1);
+        (, uint256 borrowedAmt,) = pool.positions(user1);
         assertGt(borrowedAmt, 500 ether);
     }
 
@@ -197,7 +197,7 @@ contract LendingPoolTest is Test {
         vm.prank(liquidator);
         pool.liquidate(user1);
 
-        (, uint256 borrowedAmt, ) = pool.positions(user1);
+        (, uint256 borrowedAmt,) = pool.positions(user1);
         assertEq(borrowedAmt, 0);
 
         assertLt(borrow.balanceOf(liquidator), liquidatorBorrowBalanceBefore);
@@ -218,7 +218,7 @@ contract LendingPoolTest is Test {
         vm.prank(liquidator);
         pool.liquidate(user1);
 
-        (, uint256 borrowedAmt, ) = pool.positions(user1);
+        (, uint256 borrowedAmt,) = pool.positions(user1);
         assertEq(borrowedAmt, 0);
     }
 }

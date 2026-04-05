@@ -41,12 +41,7 @@ contract LendingPool is Ownable {
     event Withdrawn(address indexed user, uint256 amount);
     event Borrowed(address indexed user, uint256 amount);
     event Repaid(address indexed user, uint256 amount);
-    event Liquidated(
-        address indexed user,
-        address indexed liquidator,
-        uint256 repaidDebt,
-        uint256 seizedCollateral
-    );
+    event Liquidated(address indexed user, address indexed liquidator, uint256 repaidDebt, uint256 seizedCollateral);
     event CollateralPriceUpdated(uint256 newPrice);
 
     constructor(address _collateralToken, address _borrowToken) Ownable(msg.sender) {
